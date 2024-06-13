@@ -13,37 +13,37 @@ This is a ToDo application built with Flutter. The app helps users manage their 
 - User-friendly UI with categories and icons.
 
 ## Screenshots
-## HomePage
-![image](https://github.com/AshutoshRajGupta/ToDo_UI_FLutter/assets/89141709/8c8df99c-85bd-4c9c-bee8-542fdabac781)
+#### HomePage
+## ![image](https://github.com/AshutoshRajGupta/ToDo_UI_FLutter/assets/89141709/8c8df99c-85bd-4c9c-bee8-542fdabac781)
 
-## ADD_TODO page
-![image](https://github.com/AshutoshRajGupta/ToDo_UI_FLutter/assets/89141709/979bee9d-7dba-42ba-b5eb-de092355e260)
+#### ADD_TODO page
+## ![image](https://github.com/AshutoshRajGupta/ToDo_UI_FLutter/assets/89141709/979bee9d-7dba-42ba-b5eb-de092355e260)
 
-## Visualization Page
-![image](https://github.com/AshutoshRajGupta/ToDo_UI_FLutter/assets/89141709/a50d6d16-b44a-4636-934d-9b4b1f0b90fa)
+#### Visualization Page
+## ![image](https://github.com/AshutoshRajGupta/ToDo_UI_FLutter/assets/89141709/a50d6d16-b44a-4636-934d-9b4b1f0b90fa)
 
 
 ## How to Use
-#### Add a New Task:
+#### 1.Add a New Task:
 Tap the "+" icon on the home page.
 Fill in the title and description fields.
 Tap "Save" to add the task.
 
-#### Edit a Task:
+#### 2.Edit a Task:
 Tap the edit icon next to a task on the home page.
 Modify the title and description fields as needed.
 Tap "Save" to update the task.
 
-#### Delete a Task:
+#### 3.Delete a Task:
 Tap the delete icon next to a task on the home page.
 
-#### Mark a Task as Completed/Incomplete:
+#### 4.Mark a Task as Completed/Incomplete:
 Tap the checkbox next to a task to toggle its completion status.
 
-#### Filter Tasks:
+#### 5.Filter Tasks:
 Use the dropdown menu in the "Todos" section to filter tasks by "All", "Completed", or "Incomplete".
 
-#### Search Tasks:
+#### 6.Search Tasks:
 Use the search bar at the top of the home page to search for tasks by title or description.
 
 
