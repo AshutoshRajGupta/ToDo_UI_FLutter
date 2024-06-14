@@ -1,56 +1,94 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'add_todo_page.dart'; // Import the AddTodoPage
 import 'todo_provider.dart';
 import 'todo.dart';
+import 'package:intl/intl.dart'; // Add this import for date formatting
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   final List<Todo> todos;
   final Function(Todo) addTodo;
+
   const HomePage({Key? key, required this.todos, required this.addTodo})
       : super(key: key);
+
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  TextEditingController _searchController = TextEditingController();
+  late String _currentDate;
+
+  @override
+  void initState() {
+    super.initState();
+    _searchController.addListener(_onSearchChanged);
+    _updateDate();
+  }
+
+  @override
+  void dispose() {
+    _searchController.removeListener(_onSearchChanged);
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  void _onSearchChanged() {
+    context.read<TodoProvider>().searchQuery = _searchController.text;
+  }
+
+  void _updateDate() {
+    setState(() {
+      _currentDate = DateFormat.yMMMMd('en_US').format(DateTime.now());
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Consumer<TodoProvider>(
       builder: (context, todoProvider, child) {
         final todos = todoProvider.todos;
-        String filter = "All";
-        List<Todo> filteredTodos = todos;
-        if (filter == "Completed") {
-          filteredTodos = todos.where((todo) => todo.completed).toList();
-        } else if (filter == "Incomplete") {
-          filteredTodos = todos.where((todo) => !todo.completed).toList();
-        }
+        String filter = todoProvider.filter.toString().split('.').last;
 
         return Scaffold(
-          // backgroundColor:
-          //     Color.fromARGB(255, 166, 225, 241), // Brighter background color
           body: Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const SizedBox(height: 20),
-                const Text(
-                  'Welcome to the ToDo App',
-                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                ),
                 const SizedBox(height: 10),
-                const Text(
-                  'Manage your tasks efficiently and stay organized.',
-                  style: TextStyle(fontSize: 18),
+                const Center(
+                  child: Text(
+                    'Welcome ASHUTOSH !!!',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Color.fromARGB(255, 18, 9, 152),
+                    ),
+                  ),
                 ),
                 const SizedBox(height: 20),
-                // Row of icons above the search bar
+                const Center(
+                  child: Text(
+                    'Manage your tasks efficiently and stay organized.',
+                    style: TextStyle(
+                      fontSize: 20,
+                      color: Color.fromARGB(255, 19, 19, 20),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 20),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: const [
-                    Icon(Icons.add_task, color: Colors.deepPurple, size: 28),
+                    Icon(Icons.add_task,
+                        color: Color.fromARGB(255, 122, 165, 11), size: 30),
                     Icon(Icons.check_circle,
-                        color: Colors.deepPurple, size: 28),
-                    Icon(Icons.event_note, color: Colors.deepPurple, size: 28),
-                    Icon(Icons.alarm, color: Colors.deepPurple, size: 28),
+                        color: Color.fromARGB(255, 61, 214, 94), size: 30),
+                    Icon(Icons.event_note,
+                        color: Color.fromARGB(255, 45, 145, 217), size: 30),
+                    Icon(Icons.alarm,
+                        color: Color.fromARGB(255, 229, 129, 14), size: 30),
                   ],
                 ),
                 const SizedBox(height: 20),
@@ -58,6 +96,7 @@ class HomePage extends StatelessWidget {
                   children: [
                     Expanded(
                       child: TextField(
+                        controller: _searchController,
                         decoration: InputDecoration(
                           prefixIcon: const Icon(Icons.search),
                           hintText: 'Search Todos...',
@@ -81,13 +120,25 @@ class HomePage extends StatelessWidget {
                     ),
                     const SizedBox(width: 10),
                     IconButton(
-                      icon: const Icon(Icons.account_circle),
-                      iconSize: 32,
+                      icon: const Icon(
+                        Icons.account_circle,
+                        color: Color.fromARGB(255, 214, 62, 123),
+                      ),
+                      iconSize: 52,
                       onPressed: () {
                         // Add functionality for user icon here if needed
                       },
                     ),
                   ],
+                ),
+                const SizedBox(height: 20),
+                Text(
+                  'Date: $_currentDate',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.deepPurple,
+                  ),
                 ),
                 const SizedBox(height: 20),
                 Row(
@@ -104,7 +155,6 @@ class HomePage extends StatelessWidget {
                           TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                     ),
                     const Spacer(),
-                    // Dropdown menu for filtering todos
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 12.0),
                       decoration: BoxDecoration(
@@ -132,8 +182,8 @@ class HomePage extends StatelessWidget {
                             color: Colors.deepPurple,
                           ),
                           onChanged: (String? newValue) {
-                            // Update the filter
-                            filter = newValue!;
+                            // Update the filter and trigger rebuild
+                            context.read<TodoProvider>().setFilter(newValue!);
                           },
                           items: <String>['All', 'Completed', 'Incomplete']
                               .map<DropdownMenuItem<String>>((String value) {
@@ -150,59 +200,47 @@ class HomePage extends StatelessWidget {
                 const SizedBox(height: 10),
                 Expanded(
                   child: ListView.builder(
-                    itemCount: filteredTodos.length,
+                    itemCount: todos.length,
                     itemBuilder: (context, index) {
-                      final todo = filteredTodos[index];
-                      return ListTile(
-                        leading: Checkbox(
-                          value: todo.completed,
-                          onChanged: (value) {
-                            // Update the todo completion status
-                            todoProvider.updateTodoCompletion(todo.id, value!);
-                          },
-                        ),
-                        title: Text(
-                          todo.title,
-                          style: TextStyle(
-                            // Apply strike-through if todo is completed
-                            decoration: todo.completed
-                                ? TextDecoration.lineThrough
-                                : TextDecoration.none,
+                      final todo = todos[index];
+                      return Container(
+                        margin: const EdgeInsets.symmetric(vertical: 4.0),
+                        padding: const EdgeInsets.all(8.0),
+                        decoration: BoxDecoration(
+                          color:
+                              todo.completed ? Colors.green[100] : Colors.white,
+                          borderRadius: BorderRadius.circular(8.0),
+                          border: Border.all(
+                            color: Colors.grey.withOpacity(0.5),
                           ),
                         ),
-                        subtitle: Text(todo.description),
-                        trailing: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            IconButton(
-                              icon: Icon(Icons.edit),
-                              onPressed: () {
-                                // Navigate to the AddTodoPage with existing todo data for editing
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => AddTodoPage(
-                                      addTodo: (updatedTodo) {
-                                        // Update the existing todo with the edited data
-                                        todoProvider.updateTodo(updatedTodo);
-                                        // Pop the AddTodoPage from the navigation stack
-                                        Navigator.pop(context);
-                                      },
-                                      todo:
-                                          todo, // Pass the existing todo data to the AddTodoPage
-                                    ),
-                                  ),
-                                );
-                              },
+                        child: ListTile(
+                          leading: Checkbox(
+                            value: todo.completed,
+                            onChanged: (value) {
+                              // Update the todo completion status
+                              context
+                                  .read<TodoProvider>()
+                                  .updateTodoCompletion(todo.id, value!);
+                            },
+                          ),
+                          title: Text(
+                            todo.title,
+                            style: TextStyle(
+                              // Apply strike-through if todo is completed
+                              decoration: todo.completed
+                                  ? TextDecoration.lineThrough
+                                  : TextDecoration.none,
                             ),
-                            IconButton(
-                              icon: Icon(Icons.delete),
-                              onPressed: () {
-                                // Handle delete button press
-                                todoProvider.removeTodo(todo.id);
-                              },
-                            ),
-                          ],
+                          ),
+                          subtitle: Text(todo.description),
+                          trailing: IconButton(
+                            icon: Icon(Icons.delete),
+                            onPressed: () {
+                              // Handle delete button press
+                              context.read<TodoProvider>().removeTodo(todo.id);
+                            },
+                          ),
                         ),
                       );
                     },

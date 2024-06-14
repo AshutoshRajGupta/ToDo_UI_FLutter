@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 
 import 'home_page.dart';
 import 'add_todo_page.dart';
-import 'todo.dart';
 import 'todo_provider.dart';
 import 'visualization_page.dart';
 
@@ -16,19 +15,17 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'ToDo App',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      home: MultiProvider(
-        providers: [
-          ChangeNotifierProvider(
-            create: (_) => TodoProvider(),
-          ),
-        ],
-        child: MyHomePage(title: 'ToDo APP'),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => TodoProvider()),
+      ],
+      child: MaterialApp(
+        title: 'ToDo App',
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+          useMaterial3: true,
+        ),
+        home: const MyHomePage(title: 'ToDo App'),
       ),
     );
   }
@@ -54,12 +51,6 @@ class _MyHomePageState extends State<MyHomePage> {
           widget.title,
           style: const TextStyle(fontWeight: FontWeight.bold),
         ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.account_circle),
-            onPressed: () {},
-          ),
-        ],
       ),
       body: IndexedStack(
         index: _selectedIndex,
@@ -74,27 +65,25 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           AddTodoPage(
             addTodo: (todo) {
-              // Implement adding todo functionality here
+              Provider.of<TodoProvider>(context, listen: false).addTodo(todo);
             },
           ),
           const VisualizationPage(),
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
+        backgroundColor:
+            Color.fromARGB(255, 208, 209, 204), // Set the background color here
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
         items: const [
           BottomNavigationBarItem(
-            icon: Icon(Icons.home),
+            icon: Icon(Icons.home, color: Color.fromARGB(255, 7, 7, 7)),
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.add),
+            icon: Icon(Icons.add, color: Color.fromARGB(255, 15, 15, 14)),
             label: 'Add ToDo',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.show_chart),
-            label: 'Visualization',
           ),
         ],
       ),

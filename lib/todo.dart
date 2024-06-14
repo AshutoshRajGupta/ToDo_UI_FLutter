@@ -1,11 +1,10 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 
 class Todo {
-  final int id; // Define the id property
-
-  final String title;
-  final String description;
-  final String date;
+  int id;
+  String title;
+  String description;
+  String date;
   bool completed;
 
   Todo({
@@ -15,4 +14,32 @@ class Todo {
     required this.date,
     this.completed = false,
   });
+
+  // Getter for id
+  int get getId => id;
+
+  // Setter for id
+  set setId(int newId) {
+    id = newId;
+  }
+
+  factory Todo.fromJson(Map<String, dynamic> json) {
+    return Todo(
+      id: json['id'],
+      title: json['title'],
+      description: json['description'],
+      date: json['date'],
+      completed: json['completed'],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'title': title,
+      'description': description,
+      'date': date,
+      'completed': completed,
+    };
+  }
 }

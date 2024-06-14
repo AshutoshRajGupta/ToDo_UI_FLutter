@@ -69,7 +69,7 @@ class _AddTodoPageState extends State<AddTodoPage> {
         title: const Text(
           'New Task',
           style: TextStyle(
-            color: Colors.lightBlue,
+            color: Color.fromARGB(255, 4, 147, 42),
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -92,7 +92,7 @@ class _AddTodoPageState extends State<AddTodoPage> {
                   ),
                 ),
                 DropdownButton<int>(
-                  value: DateTime.now().month,
+                  value: _selectedMonth.month,
                   items: List.generate(12, (index) {
                     return DropdownMenuItem<int>(
                       value: index + 1,
@@ -103,15 +103,18 @@ class _AddTodoPageState extends State<AddTodoPage> {
                   onChanged: (int? newValue) {
                     if (newValue != null) {
                       setState(() {
-                        _selectedDate =
-                            DateFormat('yyyy-MM-dd').format(DateTime.now());
+                        _selectedMonth = DateTime(
+                            _selectedMonth.year, newValue, _selectedMonth.day);
+                        _selectedIndex = 0; // Reset the selected index
+                        _selectedDate = DateFormat('yyyy-MM-dd')
+                            .format(_currentWeekDates(_selectedMonth)[0]);
                       });
                     }
                   },
                 ),
               ],
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 30),
             SizedBox(
               height: 60,
               child: ListView.builder(
@@ -135,7 +138,7 @@ class _AddTodoPageState extends State<AddTodoPage> {
                       decoration: BoxDecoration(
                         color: _selectedIndex == index
                             ? Colors.blue
-                            : Colors.grey[200],
+                            : Colors.grey[400],
                         borderRadius: BorderRadius.circular(8.0),
                       ),
                       child: Column(
@@ -165,30 +168,33 @@ class _AddTodoPageState extends State<AddTodoPage> {
                 },
               ),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 40),
             Text(
               'Date: $_selectedDate',
               style: const TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 16,
+                color: Color.fromARGB(255, 209, 58, 94),
               ),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 30),
             SizedBox(
-              height: 80,
+              height: 90,
               child: TextField(
                 controller: _titleController,
                 decoration: const InputDecoration(
+                  fillColor: Color.fromARGB(255, 209, 58, 94),
                   labelText: 'Title',
                   prefixIcon: Icon(Icons.title),
                 ),
               ),
             ),
             SizedBox(
-              height: 60,
+              height: 80,
               child: TextField(
                 controller: _descriptionController,
                 decoration: const InputDecoration(
+                  fillColor: Color.fromARGB(255, 209, 58, 94),
                   labelText: 'Description',
                   prefixIcon: Icon(Icons.description),
                 ),
@@ -198,6 +204,15 @@ class _AddTodoPageState extends State<AddTodoPage> {
             Center(
               child: ElevatedButton(
                 onPressed: _addTodo,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color.fromARGB(
+                      255, 67, 50, 214), // Button background color
+                  foregroundColor: Colors.white, // Button text color
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 20, vertical: 12), // Button padding
+                  textStyle: const TextStyle(
+                      fontSize: 18, fontWeight: FontWeight.bold), // Text style
+                ),
                 child: const Text('Add ToDo'),
               ),
             ),
