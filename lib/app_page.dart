@@ -8,7 +8,7 @@ class AppPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromARGB(
+      backgroundColor: const Color.fromARGB(
           255, 205, 182, 90), // Set the desired background color here
 
       body: Padding(
@@ -28,18 +28,15 @@ class AppPage extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 25), // Space between text and image
-            Expanded(
-              child: Center(
-                child: Padding(
-                  padding:
-                      const EdgeInsets.all(8.0), // Space from all four sides
-                  child: SizedBox(
-                    width: 400, // Set the desired width
-                    height: 300, // Set the desired height
-                    child: Image.asset(
-                      '../assets/images/image2.png', // Path to your image file
-                      fit: BoxFit.cover,
-                    ),
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0), // Space from all four sides
+                child: SizedBox(
+                  width: 300, // Set the desired width
+                  height: 300, // Set the desired height
+                  child: Image.asset(
+                    'assets/images/image2.png', // Path to your asset image
+                    fit: BoxFit.cover,
                   ),
                 ),
               ),
