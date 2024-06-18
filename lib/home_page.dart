@@ -59,7 +59,7 @@ class _HomePageState extends State<HomePage> {
                 const SizedBox(height: 10),
                 const Center(
                   child: Text(
-                    'Welcome ASHUTOSH !!!',
+                    'Welcome USER !!!',
                     style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,

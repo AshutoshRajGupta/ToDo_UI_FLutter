@@ -5,6 +5,7 @@ import 'home_page.dart';
 import 'add_todo_page.dart';
 import 'todo_provider.dart';
 import 'visualization_page.dart';
+import 'app_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -41,9 +42,20 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _selectedIndex = 0;
+  bool _showAppPage = true;
+
+  void _onNavigateToHome() {
+    setState(() {
+      _showAppPage = false;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
+    if (_showAppPage) {
+      return AppPage(onNavigateToHome: _onNavigateToHome);
+    }
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
